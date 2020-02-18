@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b6f4ee4f05350449948deb51497527, type: 3}
   m_Name: Localization
   m_EditorClassIdentifier: 
+  version: 1.0.8
   spreadsheetId: 1WYJXF0GsAm4OsfTxF9J_WaKqwJ4qs3e1Ifg2FTDL91o
   languages:
   - Russian

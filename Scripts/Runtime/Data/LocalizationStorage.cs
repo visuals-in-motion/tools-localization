@@ -16,6 +16,12 @@ namespace Visuals
 
         //идентификатор таблицы
         [SerializeField]
+        private string version = string.Empty;
+        public static string GetVersion() { return GetSettings().version; }
+        public static void SetVersion(string value) { GetSettings().version = value; }
+
+        //идентификатор таблицы
+        [SerializeField]
         private string spreadsheetId = string.Empty;
         public static string GetSpreadsheetId() { return GetSettings().spreadsheetId; }
         
