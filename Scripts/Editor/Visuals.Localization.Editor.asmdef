@@ -1,5 +1,5 @@
 {
-    "name": "NewAssembly",
+    "name": "Visuals.Localization.Editor",
     "references": [
         "Visuals.Localization",
         "Unity.TextMeshPro",

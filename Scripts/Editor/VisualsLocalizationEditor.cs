@@ -7,18 +7,6 @@ namespace Visuals
 {
     public class VisualsLocalizationEditor
     {
-        [MenuItem("Visuals/Localization/Import StreamingAssets")]
-        public static void CheckCredentials()
-        {
-            string path = Application.streamingAssetsPath + "/Localization";
-            if (!File.Exists(path + "/credentials.json"))
-            {
-                string packagePath = Path.GetFullPath("Packages/ru.visuals.localization");
-                Debug.LogError(packagePath);
-                AssetDatabase.ImportPackage(packagePath + "/Package Resources/StreamingAssets.unitypackage", true);
-            }
-        }
-
         public static void InspectorUI(IEditor component)
         {
             //CheckCredentials();
