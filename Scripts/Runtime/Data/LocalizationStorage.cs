@@ -95,6 +95,8 @@ namespace Visuals
 
             if (rewrite || (!File.Exists(path) && !rewrite))
             {
+                if (!File.Exists(Application.streamingAssetsPath)) Directory.CreateDirectory(Application.streamingAssetsPath);
+
                 string json = JsonUtility.ToJson(settings);
                 File.WriteAllText(path, json);
             }
