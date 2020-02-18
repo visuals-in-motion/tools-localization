@@ -6,9 +6,5 @@
   "author":"Visuals",
   "description":"Library for localization in projects",
   "dependencies": {
-  },
-  "repository":{
-    "type":"git",
-    "url":"https://github.com/visuals-in-motion/tools-localization.git"
   }
 }
