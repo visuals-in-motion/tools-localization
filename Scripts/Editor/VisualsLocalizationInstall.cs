@@ -13,11 +13,30 @@ namespace Visuals
             CheckCredentials();
         }
 
+        private static Package package;
+        [SerializeField]
+        private struct Package
+        {
+            public string name;
+            public string displayName;
+            public string version;
+            public string unity;
+            public string author;
+        }
+
         [MenuItem("Visuals/Localization/Import StreamingAssets")]
-        public static void CheckCredentials()
+        public static void CheckCredentials() 
         {
             string packagePath = GetPackageRelativePath();
-            AssetDatabase.ImportPackage(packagePath + "/Package Resources/StreamingAssets.unitypackage", true);
+
+            string json = File.ReadAllText(packagePath + "/package.json");
+            package = JsonUtility.FromJson<Package>(json);
+
+            if (package.version != LocalizationStorage.GetVersion())
+            {
+                LocalizationStorage.SetVersion(package.version);
+                AssetDatabase.ImportPackage(packagePath + "/Package Resources/StreamingAssets.unitypackage", true);
+            }
         }
 
         private static string GetPackageRelativePath()
