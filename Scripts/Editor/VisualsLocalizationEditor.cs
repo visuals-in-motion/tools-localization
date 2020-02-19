@@ -9,9 +9,7 @@ namespace Visuals
     {
         public static void InspectorUI(IEditor component)
         {
-            //CheckCredentials();
-
-            if (LocalizationStorage.GetCategories().Count > 0)
+            if (LocalizationStorage.GetCategories() != null && LocalizationStorage.GetCategories().Count > 0)
             {
                 EditorGUILayout.Space();
 

@@ -24,9 +24,17 @@ namespace Visuals
             public string author;
         }
 
-        [MenuItem("Visuals/Localization/Import StreamingAssets")]
+        [MenuItem("Visuals/Localization/Import StreamingAssets")] 
         public static void CheckCredentials() 
         {
+            if (!Directory.Exists(Application.dataPath + "/Resources")) Directory.CreateDirectory(Application.dataPath + "/Resources");
+            if (!File.Exists(Application.dataPath + "/Resources/Localization.asset"))
+            {
+                LocalizationStorage asset = ScriptableObject.CreateInstance<LocalizationStorage>();
+                AssetDatabase.CreateAsset(asset, "Assets/Resources/Localization.asset"); 
+                AssetDatabase.SaveAssets();
+            }
+
             string packagePath = GetPackageRelativePath();
 
             string json = File.ReadAllText(packagePath + "/package.json");
@@ -37,6 +45,12 @@ namespace Visuals
                 LocalizationStorage.SetVersion(package.version);
                 AssetDatabase.ImportPackage(packagePath + "/Package Resources/StreamingAssets.unitypackage", true);
             }
+        }
+
+        [MenuItem("Visuals/Localization/Import Google Sheets")]
+        public static void ImportGoogleSheets()
+        {
+            VisualsLocalization.Import();
         }
 
         private static string GetPackageRelativePath()

@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 namespace Visuals
 {
-    [CreateAssetMenu(fileName = "Localization", menuName = "Visuals/Localization")]
     [Serializable]
     public class LocalizationStorage : ScriptableObject
     {
@@ -37,7 +36,7 @@ namespace Visuals
         //переводы
         [SerializeField]
         private List<string> categories = new List<string>();
-        public static List<string> GetCategories() { return GetSettings().categories; }
+        public static List<string> GetCategories() { return (GetSettings() != null) ? GetSettings().categories : null; }
 
         [SerializeField]
         private List<Key> keys = new List<Key>();
@@ -51,7 +50,7 @@ namespace Visuals
 
         [SerializeField]
         private List<Localization> localization = new List<Localization>();
-        public static List<Localization> GetLocalization() { return GetSettings().localization; }
+        public static List<Localization> GetLocalization() { return (GetSettings() != null) ? GetSettings().localization : null; }
         [Serializable]
         public struct Localization
         {
@@ -74,7 +73,7 @@ namespace Visuals
         {
             if (localizationStorage == null)
             {
-                localizationStorage = Resources.Load("Data/Localization") as LocalizationStorage;
+                localizationStorage = Resources.Load("Localization") as LocalizationStorage;
                 Save(localizationStorage, false);
 #if !UNITY_EDITOR
                 Load(ref localizationStorage);
@@ -111,7 +110,7 @@ namespace Visuals
 
         public static bool CheckType(int category, int key, string type)
         {
-            if (category < GetLocalization().Count)
+            if (GetLocalization() != null && category < GetLocalization().Count)
             {
                 if (key < GetLocalization()[category].keys.Count)
                 {

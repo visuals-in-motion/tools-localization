@@ -13,7 +13,6 @@ namespace Visuals
 {
     public class VisualsLocalization
     {
-        private static string spreadsheetId = string.Empty;
         private static SheetsService service = null;
         private static GoogleAPI googleAPI = null;
         private static LocalizationParse localizationParse = null;
@@ -21,14 +20,12 @@ namespace Visuals
         [RuntimeInitializeOnLoadMethod]
         private static void Initialization()
         {
-            spreadsheetId = LocalizationStorage.GetSpreadsheetId(); //"11i_6WnjQmM1hSNBFvWMZe3QAontokRoZD8h4cekLUOc";
-
             googleAPI = new GoogleAPI();
             localizationParse = new LocalizationParse();
 
             service = googleAPI.Initialization();
 
-            Import(service, spreadsheetId);
+            Import(service);
         }
 
         public static void Import()
@@ -39,16 +36,33 @@ namespace Visuals
             }
             else
             {
-                Import(service, spreadsheetId);
+                Import(service);
             }
         }
 
-        public static void Import(SheetsService service, string spreadsheetId)
+        public static void Import(SheetsService service)
         {
-            var data = googleAPI.GetData(service, spreadsheetId);
-            if (data != null)
+            if (LocalizationStorage.GetSpreadsheetId().Length > 0) //https://docs.google.com/spreadsheets/d/1WYJXF0GsAm4OsfTxF9J_WaKqwJ4qs3e1Ifg2FTDL91o/edit#gid=0
             {
-                localizationParse.Run(service, spreadsheetId, data);
+                string spreadsheetId = LocalizationStorage.GetSpreadsheetId();
+
+                int indexStart = spreadsheetId.IndexOf("/d/");
+                if (indexStart >= 0)
+                {
+                    spreadsheetId = spreadsheetId.Remove(0, indexStart + 3);
+                }
+
+                int indexEnd = spreadsheetId.IndexOf("/");
+                if (indexEnd >= 0)
+                {
+                    spreadsheetId = spreadsheetId.Remove(indexEnd);
+                }
+
+                var data = googleAPI.GetData(service, spreadsheetId);
+                if (data != null)
+                {
+                    localizationParse.Run(service, spreadsheetId, data);
+                }
             }
         }
 
