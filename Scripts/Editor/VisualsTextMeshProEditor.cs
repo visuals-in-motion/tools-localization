@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using TMPro.EditorUtilities;
 using UnityEditor;
 using UnityEngine;
@@ -42,3 +41,4 @@ namespace Visuals
         }
     }
 }
+#endif

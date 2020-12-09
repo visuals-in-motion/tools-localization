@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
+﻿#if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.Events;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Visuals
@@ -74,3 +71,4 @@ namespace Visuals
         }
     }
 }
+#endif
