@@ -103,7 +103,7 @@ namespace Visuals
 
         private static void Load(ref LocalizationStorage settings)
         {
-            string path = Application.persistentDataPath + "/Localization-" + SceneManager.GetActiveScene().name + ".json";
+            string path = Application.streamingAssetsPath + "/Localization-" + SceneManager.GetActiveScene().name + ".json";
             string json = File.ReadAllText(path);
             JsonUtility.FromJsonOverwrite(json, settings);
         }
