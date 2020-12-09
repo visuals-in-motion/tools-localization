@@ -1,6 +1,6 @@
 {
   "name": "ru.visuals.localization",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Библиотека для локализации проекта",
   "repository": {
     "type": "git",
@@ -9,5 +9,7 @@
   "author": "Visuals <hello@visuals.ru> (https://github.com/visuals-in-motion)",
   "displayName": "Visuals Localization",
   "unity": "2019.3",
-  "dependencies": {}
+  "dependencies": {
+    "ru.visuals.localization": "https://github.com/visuals-in-motion/tools-localization.git"
+  }
 }
