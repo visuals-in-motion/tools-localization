@@ -88,9 +88,10 @@ namespace Visuals
             Save(GetSettings());
         }
 
-        private static void Save(LocalizationStorage settings, bool rewrite = true)
+        private static void Save(LocalizationStorage settings, bool rewrite = true, bool multiScene = false)
         {
-            string path = Application.streamingAssetsPath + "/Localization-" + SceneManager.GetActiveScene().name + ".json";
+            string scene = (multiScene) ? SceneManager.GetActiveScene().name : "Main";
+            string path = Application.streamingAssetsPath + "/Localization-" + scene + ".json";
 
             if (rewrite || (!File.Exists(path) && !rewrite))
             {
@@ -104,6 +105,7 @@ namespace Visuals
         private static void Load(ref LocalizationStorage settings)
         {
             string path = Application.streamingAssetsPath + "/Localization-" + SceneManager.GetActiveScene().name + ".json";
+            if (!File.Exists(path)) path = Application.streamingAssetsPath + "/Localization-Main.json";
             string json = File.ReadAllText(path);
             JsonUtility.FromJsonOverwrite(json, settings);
         }
