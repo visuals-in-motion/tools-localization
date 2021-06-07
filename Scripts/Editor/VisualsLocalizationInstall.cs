@@ -35,8 +35,8 @@ namespace Visuals
                 AssetDatabase.SaveAssets();
             }
 
-            string packagePath = GetPackageRelativePath();
-
+            /*string packagePath = GetPackageRelativePath();
+            Debug.Log(packagePath); 
             string json = File.ReadAllText(packagePath + "/package.json");
             package = JsonUtility.FromJson<Package>(json);
 
@@ -44,7 +44,7 @@ namespace Visuals
             {
                 LocalizationStorage.SetVersion(package.version);
                 AssetDatabase.ImportPackage(packagePath + "/Package Resources/StreamingAssets.unitypackage", true);
-            }
+            }*/
         }
 
         [MenuItem("Visuals/Localization/Import Google Sheets")]
@@ -53,7 +53,7 @@ namespace Visuals
             VisualsLocalization.Import();
         }
 
-        private static string GetPackageRelativePath()
+        /*private static string GetPackageRelativePath()
         {
             string packagePath = Path.GetFullPath("Packages/ru.visuals.localization");
             if (Directory.Exists(packagePath))
@@ -73,7 +73,7 @@ namespace Visuals
 
             Debug.LogError("Error: path not found");
             return null;
-        }
+        }*/
     }
 }
 #endif
