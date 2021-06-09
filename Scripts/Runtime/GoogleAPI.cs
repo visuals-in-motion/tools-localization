@@ -22,7 +22,7 @@ namespace Visuals
         public SheetsService Initialization()
         {
             UserCredential credential;
-            string pathLocalization = Application.streamingAssetsPath + "/Localization";
+            string pathLocalization = Application.streamingAssetsPath;
 
             using (var stream = new FileStream(pathLocalization + "/credentials.json", FileMode.Open, FileAccess.Read))
             {
