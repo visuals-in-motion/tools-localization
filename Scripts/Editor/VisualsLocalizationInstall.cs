@@ -35,10 +35,11 @@ namespace Visuals
                 AssetDatabase.SaveAssets();
             }
 
-            if (!File.Exists(Application.streamingAssetsPath + "/credentials.json")) 
+            string streamingPath = Application.streamingAssetsPath + "/Localization";
+            if (!File.Exists(streamingPath + "/credentials.json")) 
             {
-                if (!Directory.Exists(Application.streamingAssetsPath)) Directory.CreateDirectory(Application.streamingAssetsPath);
-                File.Copy(GetPackageRelativePath() + "/Package Resources/credentials.json", Application.streamingAssetsPath + "/Localization/credentials.json");
+                if (!Directory.Exists(streamingPath)) Directory.CreateDirectory(streamingPath);
+                File.Copy(GetPackageRelativePath() + "/Package Resources/credentials.json", streamingPath + "/credentials.json");
             }
         }
 
