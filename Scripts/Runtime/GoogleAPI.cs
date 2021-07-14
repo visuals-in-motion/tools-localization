@@ -24,11 +24,11 @@ namespace Visuals
             UserCredential credential;
             string pathLocalization = Application.streamingAssetsPath;
 
-            using (var stream = new FileStream(pathLocalization + "/credentials.json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream(pathLocalization + "/Localization/credentials.json", FileMode.Open, FileAccess.Read))
             {
                 string credPath = pathLocalization;
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
+                    GoogleClientSecrets.FromStream(stream).Secrets,
                     Scopes,
                     "user",
                     CancellationToken.None,
