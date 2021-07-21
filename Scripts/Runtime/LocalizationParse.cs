@@ -13,6 +13,7 @@ namespace Visuals
 {
     class LocalizationParse
     {
+#if GOOGLE_LIB
         public void Run(SheetsService service, string spreadsheetId, IList<Sheet> data)
         {
             GetLanguages().Clear();
@@ -85,5 +86,6 @@ namespace Visuals
 
             Save();
         }
+#endif
     }
 }

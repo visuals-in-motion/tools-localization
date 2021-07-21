@@ -1,21 +1,20 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿#if GOOGLE_LIB
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Google.Apis.Util.Store;
-using System;
+#endif
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System.IO; 
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Visuals
 {
     class GoogleAPI
     {
+#if GOOGLE_LIB
         static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
         static string ApplicationName = "Visuals Localization";
 
@@ -60,5 +59,6 @@ namespace Visuals
                 return null;
             }
         }
+#endif
     }
 }

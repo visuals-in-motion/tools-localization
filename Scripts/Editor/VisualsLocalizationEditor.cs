@@ -38,7 +38,9 @@ namespace Visuals
 
                     if (GUILayout.Button("Import"))
                     {
+#if GOOGLE_LIB
                         VisualsLocalization.Import();
+#endif
                     }
 
                     EditorGUILayout.Space();

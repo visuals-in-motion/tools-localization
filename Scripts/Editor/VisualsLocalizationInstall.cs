@@ -1,7 +1,9 @@
 ﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using System.Linq;
 
 namespace Visuals
 {
@@ -10,6 +12,7 @@ namespace Visuals
     {
         static VisualsLocalizationInstall()
         {
+            AddDependencyToManifest();
             CheckCredentials();
         }
 
@@ -46,7 +49,9 @@ namespace Visuals
         [MenuItem("Visuals/Localization/Import Google Sheets")]
         public static void ImportGoogleSheets()
         {
+#if GOOGLE_LIB
             VisualsLocalization.Import();
+#endif
         }
 
         private static string GetPackageRelativePath()
@@ -69,6 +74,19 @@ namespace Visuals
 
             Debug.LogError("Error: path not found");
             return null;
+        }
+        
+        private static void AddDependencyToManifest()
+        {
+            string manifestPath = Path.GetFullPath("Packages/manifest.json");
+            string googleLibrariesPackage = "\"ru.visuals.google-libraries\": \"https://github.com/visuals-in-motion/tools-google-libraries.git\",";
+            List<string> file = File.ReadAllLines(manifestPath).ToList();
+            if(!file.Contains(googleLibrariesPackage))
+            {
+                file.Insert(2, googleLibrariesPackage);
+                File.WriteAllLines(manifestPath, file);
+                AssetDatabase.Refresh();
+            }
         }
     }
 }

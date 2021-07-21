@@ -1,8 +1,10 @@
-﻿using Google.Apis.Auth.OAuth2;
+﻿#if GOOGLE_LIB
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Google.Apis.Util.Store;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -13,19 +15,23 @@ namespace Visuals
 {
     public class VisualsLocalization
     {
+#if GOOGLE_LIB
         private static SheetsService service = null;
+
         private static GoogleAPI googleAPI = null;
         private static LocalizationParse localizationParse = null;
 
         [RuntimeInitializeOnLoadMethod]
         private static void Initialization()
         {
+
             googleAPI = new GoogleAPI();
             localizationParse = new LocalizationParse();
 
             service = googleAPI.Initialization();
 
             Import(service);
+
         }
 
         public static void Import()
@@ -36,13 +42,16 @@ namespace Visuals
             }
             else
             {
+
                 Import(service);
+
             }
         }
 
         public static void Import(SheetsService service)
         {
-            if (LocalizationStorage.GetSpreadsheetId().Length > 0) //https://docs.google.com/spreadsheets/d/1WYJXF0GsAm4OsfTxF9J_WaKqwJ4qs3e1Ifg2FTDL91o/edit#gid=0
+            if (LocalizationStorage.GetSpreadsheetId().Length >
+                0) //https://docs.google.com/spreadsheets/d/1WYJXF0GsAm4OsfTxF9J_WaKqwJ4qs3e1Ifg2FTDL91o/edit#gid=0
             {
                 string spreadsheetId = LocalizationStorage.GetSpreadsheetId();
 
@@ -57,15 +66,16 @@ namespace Visuals
                 {
                     spreadsheetId = spreadsheetId.Remove(indexEnd);
                 }
-
                 var data = googleAPI.GetData(service, spreadsheetId);
+
                 if (data != null)
                 {
                     localizationParse.Run(service, spreadsheetId, data);
                 }
+
             }
         }
-
+#endif
         public static void Export()
         {
             Debug.LogError("Export don't work...");
