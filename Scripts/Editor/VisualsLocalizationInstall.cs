@@ -85,7 +85,6 @@ namespace Visuals
             {
                 file.Insert(2, googleLibrariesPackage);
                 File.WriteAllLines(manifestPath, file);
-                AssetDatabase.Refresh();
             }
         }
     }
