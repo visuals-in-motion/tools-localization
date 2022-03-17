@@ -63,7 +63,11 @@ namespace Visuals
             if (!File.Exists(streamingPath + "/credentials.json"))
             {
                 if (!Directory.Exists(streamingPath)) Directory.CreateDirectory(streamingPath);
-                File.Copy(GetPackageRelativePath() + "/Package Resources/credentials.json", streamingPath + "/credentials.json");
+                string packagePath = GetPackageRelativePath();
+                if (packagePath != null)
+				{
+                    File.Copy(packagePath + "/Package Resources/credentials.json", streamingPath + "/credentials.json");
+                }
             }
         }
         private static string GetPackageRelativePath()
