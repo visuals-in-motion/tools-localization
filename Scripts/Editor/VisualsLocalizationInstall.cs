@@ -16,8 +16,8 @@ namespace Visuals
         {
 #if UNITY_EDITOR_WIN
             CheckDependencyInManifest();
-            CheckCredentials();
 #endif
+            CheckCredentials();
         }
         [MenuItem("Visuals/Localization/Import Google Sheets")]
 		public static void ImportGoogleSheets()
