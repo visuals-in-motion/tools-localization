@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace Visuals
 {
@@ -14,7 +15,8 @@ namespace Visuals
         static VisualsLocalizationInstall()
         {
 #if UNITY_EDITOR_WIN
-            CheckDependencyInManifest(); //
+            CheckDependencyInManifest();
+            CheckCredentials();
 #endif
         }
         [MenuItem("Visuals/Localization/Import Google Sheets")]
@@ -46,6 +48,44 @@ namespace Visuals
                 file.Insert(2, dependency);
                 File.WriteAllLines(manifestPath, file);
             }
+        }
+        public static void CheckCredentials()
+        {
+            if (!Directory.Exists(Application.dataPath + "/Resources")) Directory.CreateDirectory(Application.dataPath + "/Resources");
+            if (!File.Exists(Application.dataPath + "/Resources/Localization.asset"))
+            {
+                LocalizationStorage asset = ScriptableObject.CreateInstance<LocalizationStorage>();
+                AssetDatabase.CreateAsset(asset, "Assets/Resources/Localization.asset");
+                AssetDatabase.SaveAssets();
+            }
+
+            string streamingPath = Application.streamingAssetsPath + "/Localization";
+            if (!File.Exists(streamingPath + "/credentials.json"))
+            {
+                if (!Directory.Exists(streamingPath)) Directory.CreateDirectory(streamingPath);
+                File.Copy(GetPackageRelativePath() + "/Package Resources/credentials.json", streamingPath + "/credentials.json");
+            }
+        }
+        private static string GetPackageRelativePath()
+        {
+            string packagePath = Path.GetFullPath("Packages/ru.visuals.localization");
+            if (Directory.Exists(packagePath))
+            {
+                return packagePath;
+            }
+
+            packagePath = Path.GetFullPath("Assets/..");
+            if (Directory.Exists(packagePath))
+            {
+                packagePath = packagePath + "/Assets/Packages/ru.visuals.localization";
+                if (Directory.Exists(packagePath))
+                {
+                    return packagePath;
+                }
+            }
+
+            Debug.LogError("Error: path not found");
+            return null;
         }
     }
 }
