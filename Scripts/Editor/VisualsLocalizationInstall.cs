@@ -1,89 +1,49 @@
 ﻿#if UNITY_EDITOR
+
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 
 namespace Visuals
 {
     [InitializeOnLoad]
     public class VisualsLocalizationInstall
     {
+        private static string manifestPath;
         static VisualsLocalizationInstall()
         {
-            AddDependencyToManifest();
-            CheckCredentials();
+#if UNITY_EDITOR_WIN
+            CheckDependencyInManifest(); //
+#endif
         }
-
-        private static Package package;
-        [SerializeField]
-        private struct Package
-        {
-            public string name;
-            public string displayName;
-            public string version;
-            public string unity;
-            public string author;
-        }
-
-        [MenuItem("Visuals/Localization/Import StreamingAssets")] 
-        public static void CheckCredentials() 
-        {
-            if (!Directory.Exists(Application.dataPath + "/Resources")) Directory.CreateDirectory(Application.dataPath + "/Resources");
-            if (!File.Exists(Application.dataPath + "/Resources/Localization.asset"))
-            {
-                LocalizationStorage asset = ScriptableObject.CreateInstance<LocalizationStorage>();
-                AssetDatabase.CreateAsset(asset, "Assets/Resources/Localization.asset"); 
-                AssetDatabase.SaveAssets();
-            }
-
-            string streamingPath = Application.streamingAssetsPath + "/Localization";
-            if (!File.Exists(streamingPath + "/credentials.json")) 
-            {
-                if (!Directory.Exists(streamingPath)) Directory.CreateDirectory(streamingPath);
-                File.Copy(GetPackageRelativePath() + "/Package Resources/credentials.json", streamingPath + "/credentials.json");
-            }
-        }
-
         [MenuItem("Visuals/Localization/Import Google Sheets")]
-        public static void ImportGoogleSheets()
-        {
-#if GOOGLE_LIB
+		public static void ImportGoogleSheets()
+		{
+#if GOOGLE_LIB && UNITY_EDITOR
             VisualsLocalization.Import();
 #endif
         }
-
-        private static string GetPackageRelativePath()
+        [MenuItem("Visuals/Localization/Open Google Sheets")]
+        public static void OpenGoogleSheets()
         {
-            string packagePath = Path.GetFullPath("Packages/ru.visuals.localization");
-            if (Directory.Exists(packagePath))
-            {
-                return packagePath;
-            }
-
-            packagePath = Path.GetFullPath("Assets/..");
-            if (Directory.Exists(packagePath))
-            {
-                packagePath = packagePath + "/Assets/Packages/ru.visuals.localization";
-                if (Directory.Exists(packagePath))
-                {
-                    return packagePath;
-                }
-            }
-
-            Debug.LogError("Error: path not found");
-            return null;
+            VisualsLocalization.Open();  
         }
-        
-        private static void AddDependencyToManifest()
+
+        private static void CheckDependencyInManifest()
         {
-            string manifestPath = Path.GetFullPath("Packages/manifest.json");
+            manifestPath = Path.GetFullPath("Packages/manifest.json");
             string googleLibrariesPackage = "    \"ru.visuals.google-libraries\": \"https://github.com/visuals-in-motion/tools-google-libraries.git\",";
+
             List<string> file = File.ReadAllLines(manifestPath).ToList();
-            if(!file.Contains(googleLibrariesPackage))
+
+            AddDependency(file, googleLibrariesPackage);
+        }
+        private static void AddDependency(List<string> file, string dependency)
+        {
+            if (!file.Contains(dependency))
             {
-                file.Insert(2, googleLibrariesPackage);
+                file.Insert(2, dependency);
                 File.WriteAllLines(manifestPath, file);
             }
         }

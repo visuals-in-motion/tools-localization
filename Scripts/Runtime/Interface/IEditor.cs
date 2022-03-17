@@ -8,9 +8,9 @@ namespace Visuals
     {
         bool localizationEnable { get; set; }
         string localizationType { get; }
-        int localizationCategory { get; set; }
-        int localizationKey { get; set; }
+        string localizationCategory { get; set; }
+        string localizationKeyName { get; set; }
         void LocalizationLoad();
-        void LocalizationChange(int index);
+        void LocalizationChange(int index, bool changeValues);
     }
 }

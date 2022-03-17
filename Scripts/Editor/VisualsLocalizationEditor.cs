@@ -1,12 +1,15 @@
-﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
 
 namespace Visuals
 {
     public class VisualsLocalizationEditor
     {
-        public static void InspectorUI(IEditor component)
+        static int localizationKeyIndex = 0;
+        static int localizationCategoryIndex = 0;
+        public static void InspectorUI(VisualsLocalizationComponent component)
         {
             if (LocalizationStorage.GetCategories() != null && LocalizationStorage.GetCategories().Count > 0)
             {
@@ -16,10 +19,64 @@ namespace Visuals
                 if (component.localizationEnable)
                 {
                     GUILayout.BeginVertical(EditorStyles.helpBox);
-                    component.localizationCategory = EditorGUILayout.Popup("Category", component.localizationCategory, LocalizationStorage.GetCategories().ToArray());
-
                     EditorGUI.BeginChangeCheck();
-                    component.localizationKey = EditorGUILayout.Popup("Key", component.localizationKey, LocalizationStorage.GetKeys(component.localizationCategory).ToArray());
+
+                    List<string> categoriesByType = LocalizationStorage.GetCategoriesWithKeysType(component.localizationType);
+                    localizationCategoryIndex = categoriesByType.IndexOf(component.localizationCategory);
+                    localizationCategoryIndex = EditorGUILayout.Popup("Category", localizationCategoryIndex, categoriesByType.ToArray());
+
+                    if (localizationCategoryIndex == -1 || categoriesByType.Count == 0)
+					{
+                        localizationCategoryIndex = 0;
+                        
+                        if(categoriesByType.Count == 0)
+						{
+                            component.localizationCategory = LocalizationStorage.GetCategories()[0];
+                        }
+						else
+						{
+                            component.localizationCategory = categoriesByType[0];
+                        }
+                    }
+					else
+					{
+                        if (categoriesByType.Count == 0)
+                        {
+                            component.localizationCategory = LocalizationStorage.GetCategories()[0];
+                        }
+                        else
+                        {
+                            component.localizationCategory = categoriesByType[localizationCategoryIndex];
+                        }
+                    }
+
+                    List<string> keysByType = component.GetCurrentCategoryKeysByType(component.localizationType);
+                    localizationKeyIndex = keysByType.IndexOf(component.localizationKeyName);
+                    localizationKeyIndex = EditorGUILayout.Popup("Key", localizationKeyIndex, keysByType.ToArray());
+                    if (localizationKeyIndex == -1)
+                    {
+                        localizationKeyIndex = 0;
+                        if(keysByType.Count == 0)
+						{
+                            component.localizationKeyName = component.GetCurrentCategoryAllKeys()[0];
+						}
+						else
+						{
+                            component.localizationKeyName = keysByType[0];
+                        }
+					}
+					else
+					{
+                        if (keysByType.Count == 0)
+                        {
+                            component.localizationKeyName = component.GetCurrentCategoryAllKeys()[0];
+                        }
+                        else
+                        {
+                            component.localizationKeyName = keysByType[localizationKeyIndex];
+                        }
+                    }
+                    
                     if (EditorGUI.EndChangeCheck())
                     {
                         component.LocalizationLoad();
@@ -28,39 +85,17 @@ namespace Visuals
                     EditorGUILayout.Space();
 
                     EditorGUI.BeginChangeCheck();
-                    int language = EditorGUILayout.Popup("Language", LocalizationStorage.GetCurrentLanguages(), LocalizationStorage.GetLanguages().ToArray());
+                    int lang = EditorGUILayout.Popup("Language", LocalizationStorage.GetCurrentLanguages(), LocalizationStorage.GetLanguages().ToArray());
                     if (EditorGUI.EndChangeCheck())
                     {
-                        LocalizationStorage.SetCurrentLanguages(language);
+                        LocalizationStorage.SetCurrentLanguages(lang);
                     }
 
-                    EditorGUILayout.Space();
-
-                    if (GUILayout.Button("Import"))
-                    {
-#if GOOGLE_LIB
-                        VisualsLocalization.Import();
-#endif
-                    }
-
-                    EditorGUILayout.Space();
-
-                    if (GUILayout.Button("Export"))
-                    {
-                        VisualsLocalization.Export();
-                    }
-
-                    EditorGUILayout.Space();
-
-                    if (GUILayout.Button("Open sheets"))
-                    {
-                        Application.OpenURL("https://docs.google.com/spreadsheets/d/" + LocalizationStorage.GetSpreadsheetId());
-                    }
                     GUILayout.EndHorizontal();
 
-                    if (LocalizationStorage.CheckType(component.localizationCategory, component.localizationKey, component.localizationType))
+                    if (LocalizationStorage.CheckType(component.localizationCategory, component.localizationKeyName, component.localizationType))
                     {
-                        component.LocalizationChange(LocalizationStorage.GetCurrentLanguages());
+                        component.LocalizationChange(LocalizationStorage.GetCurrentLanguages(), false);
                     }
                 }
             }
