@@ -11,11 +11,9 @@ namespace Visuals
             VisualsLocalizationAudio component = (VisualsLocalizationAudio)target;
 
             base.OnInspectorGUI();
-            VisualsLocalizationEditor.InspectorUI(component);
+            VisualsLocalizationEditor.InspectorUI(component, targets);
 
-            component.saveEnable = component.localizationEnable;
-            component.saveCategory = component.localizationCategory;
-            component.saveKeyName = component.localizationKeyName;
+            component.SaveNewValues(component.localizationEnable, component.localizationCategory, component.localizationKeyName);
 
             if (GUI.changed) EditorUtility.SetDirty(target);
         }

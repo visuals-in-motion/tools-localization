@@ -53,6 +53,12 @@ namespace Visuals
 			
 		}
 		#region Public methods
+		public void SaveNewValues(bool enable, string category, string key)
+		{
+			saveEnable = enable;
+			saveCategory = category;
+			saveKeyName = key;
+		}
 		public virtual Localization GetCurrentCategoryInfo()
 		{
 			if(localizationCategoryIndex >= 0)
@@ -74,7 +80,9 @@ namespace Visuals
 		}
 		public virtual List<string> GetCurrentValuesInfo()
 		{
+			if(localizationKey >= 0)
 			return GetCurrentKeysInfo()[localizationKey].value;
+			else return new List<string>();
 		}
 		public virtual void LocalizationLoad()
 		{
@@ -87,7 +95,7 @@ namespace Visuals
 			localizationKey = GetKeyIndexByName(localizationKeyName);
 
 			List<string> values = GetCurrentValuesInfo();
-			if(values != null)
+			if(values != null && values.Count > 0)
 			{
 				SetValues(values[languageIndex]);
 				if (changeValues)

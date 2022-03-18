@@ -9,7 +9,7 @@ namespace Visuals
     {
         static int localizationKeyIndex = 0;
         static int localizationCategoryIndex = 0;
-        public static void InspectorUI(VisualsLocalizationComponent component)
+        public static void InspectorUI(VisualsLocalizationComponent component, Object[] targets)
         {
             if (LocalizationStorage.GetCategories() != null && LocalizationStorage.GetCategories().Count > 0)
             {
@@ -80,6 +80,16 @@ namespace Visuals
                     if (EditorGUI.EndChangeCheck())
                     {
                         component.LocalizationLoad();
+
+                        for (int i = 0; i < targets.Length; i++)
+                        {
+                            VisualsLocalizationComponent targetsComponent = (VisualsLocalizationComponent)targets[i];
+                            targetsComponent.localizationEnable = component.localizationEnable;
+                            targetsComponent.localizationCategory = component.localizationCategory;
+                            targetsComponent.localizationKeyName = component.localizationKeyName;
+
+                            targetsComponent.SaveNewValues(component.localizationEnable, component.localizationCategory, component.localizationKeyName);
+                        }
                     }
 
                     EditorGUILayout.Space();

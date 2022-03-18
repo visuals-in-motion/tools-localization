@@ -1,21 +1,19 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
-
 namespace Visuals
 {
-    [CustomEditor(typeof(VisualsLocalizationText))]
+    [CustomEditor(typeof(VisualsLocalizationText)), CanEditMultipleObjects]
     public class VisualsLocalizationTextEditor : Editor
     {
-		public override void OnInspectorGUI()
+        public override void OnInspectorGUI()
         {
             VisualsLocalizationText component = (VisualsLocalizationText)target;
-
+            
             base.OnInspectorGUI();
-            VisualsLocalizationEditor.InspectorUI(component);
-            component.saveEnable = component.localizationEnable;
-            component.saveCategory = component.localizationCategory;
-            component.saveKeyName = component.localizationKeyName;
+            VisualsLocalizationEditor.InspectorUI(component, targets);
+
+            component.SaveNewValues(component.localizationEnable, component.localizationCategory, component.localizationKeyName);
 
             if (GUI.changed) EditorUtility.SetDirty(target);
         }
