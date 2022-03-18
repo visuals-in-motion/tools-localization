@@ -1,4 +1,4 @@
-﻿#if GOOGLE_LIB
+﻿#if GOOGLE_LIB && UNITY_EDITOR_WIN
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 #endif
