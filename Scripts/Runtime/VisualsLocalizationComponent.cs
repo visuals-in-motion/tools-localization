@@ -55,7 +55,11 @@ namespace Visuals
 		#region Public methods
 		public virtual Localization GetCurrentCategoryInfo()
 		{
-			return LocalizationStorage.GetLocalization()[localizationCategoryIndex];
+			if(localizationCategoryIndex >= 0)
+			{
+				return LocalizationStorage.GetLocalization()[localizationCategoryIndex];
+			}
+			return new Localization();
 		}
 		public virtual List<KeyItem> GetCurrentKeysInfo()
 		{
@@ -63,7 +67,10 @@ namespace Visuals
 		}
 		public virtual KeyItem GetCurrentKeyInfo()
 		{
-			return GetCurrentCategoryInfo().keys[localizationKey];
+			List<KeyItem> keysItem = GetCurrentCategoryInfo().keys;
+			if(localizationKey < keysItem.Count)
+				return GetCurrentCategoryInfo().keys[localizationKey];
+			return new KeyItem();
 		}
 		public virtual List<string> GetCurrentValuesInfo()
 		{
