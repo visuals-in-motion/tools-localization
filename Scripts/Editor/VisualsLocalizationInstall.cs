@@ -11,12 +11,8 @@ namespace Visuals
     [InitializeOnLoad]
     public class VisualsLocalizationInstall
     {
-        private static string manifestPath;
         static VisualsLocalizationInstall()
         {
-#if UNITY_EDITOR_WIN
-            CheckDependencyInManifest();
-#endif
             CheckCredentials();
         }
         [MenuItem("Visuals/Localization/Import Google Sheets")]
@@ -35,24 +31,6 @@ namespace Visuals
         public static void ClearLocalization()
         {
             VisualsLocalization.ClearLocalization();
-        }
-
-        private static void CheckDependencyInManifest()
-        {
-            manifestPath = Path.GetFullPath("Packages/manifest.json");
-            string googleLibrariesPackage = "    \"ru.visuals.google-libraries\": \"https://github.com/visuals-in-motion/tools-google-libraries.git\",";
-
-            List<string> file = File.ReadAllLines(manifestPath).ToList();
-
-            AddDependency(file, googleLibrariesPackage);
-        }
-        private static void AddDependency(List<string> file, string dependency)
-        {
-            if (!file.Contains(dependency))
-            {
-                file.Insert(2, dependency);
-                File.WriteAllLines(manifestPath, file);
-            }
         }
         public static void CheckCredentials()
         {
