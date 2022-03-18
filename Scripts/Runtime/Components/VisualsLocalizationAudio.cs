@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -36,7 +37,7 @@ namespace Visuals
                 SetValues(values[languageIndex]);
             }
         }
-        public override void LocalizationLoad()
+        public override async void LocalizationLoad()
         {
             if (!localizationEnable) return;
             localizationKey = GetKeyIndexByName(localizationKeyName);
@@ -52,23 +53,24 @@ namespace Visuals
                     string path = Application.streamingAssetsPath + "/" + fileName;
                     if (File.Exists(path))
                     {
-                        Debug.Log($"File.Exists {path} is {File.Exists(path)}");
-                        StartCoroutine(Load(path, fileName, i));
+                        AudioClip audioClip = await WebRequest.GetAudioClip(path);
+                        if (!audioClips.ContainsKey(fileName))
+                        {
+                            audioClips.Add(fileName, audioClip);
+                        }
+                        // StartCoroutine(Load(path, fileName, i));
                     }
                 }
             }
         }
-        private IEnumerator Load(string path, string fileName, int index)
+        private IEnumerator Load(string path, string fileName)
         {
             UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip("file://" + path, AudioType.WAV);
             yield return request.SendWebRequest();
 
             if (request.isDone)
             {
-                Debug.LogError("request.isDone");
                 AudioClip audioClip = DownloadHandlerAudioClip.GetContent(request);
-                int position = audioSource.timeSamples;
-                bool isPlaying = audioSource.isPlaying;
                 if(!audioClips.ContainsKey(fileName))
 				{
                     audioClips.Add(fileName, audioClip);
@@ -83,10 +85,8 @@ namespace Visuals
                 {
                     LocalizationLoad();
                 }
-               // Debug.LogError("SetValues " + value);
 				if (audioClips.ContainsKey(value))
 				{
-                   // Debug.LogError("udioClips.ContainsKey " + value);
                     if (audioSource.clip != audioClips[value])
 					{
                         int position = audioSource.timeSamples;
