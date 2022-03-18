@@ -85,14 +85,18 @@ namespace Visuals
 		}
 		public bool SetKeyByIndex(int index)
 		{
-			if(index >= 0 && index < LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.Count)
+			if(localizationCategoryIndex >= 0)
 			{
-				localizationKey = index;
-				localizationKeyName = saveKeyName = GetCurrentKeyName();
+				if (index >= 0 && index < LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.Count)
+				{
+					localizationKey = index;
+					localizationKeyName = saveKeyName = GetCurrentKeyName();
 
-				LocalizationChange(LocalizationStorage.GetCurrentLanguages(), true);
-				return true;
+					LocalizationChange(LocalizationStorage.GetCurrentLanguages(), true);
+					return true;
+				}
 			}
+			
 			return false;
 		}
 
@@ -104,7 +108,11 @@ namespace Visuals
 		}
 		public int GetCurrentKeyIndex()
 		{
-			return LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.FindIndex(k => k.name == localizationKeyName);
+			if(localizationCategoryIndex >= 0)
+			{
+				return LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.FindIndex(k => k.name == localizationKeyName);
+			}
+			return -1;
 		}
 		public string GetCurrentKeyName()
 		{
@@ -117,14 +125,18 @@ namespace Visuals
 		public List<string> GetCurrentCategoryKeysByType(string type)
 		{
 			List<string> list = new List<string>();
-			List<KeyItem> keys = LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys;
-			for (int i = 0; i < keys.Count; i++)
+			if(localizationCategoryIndex >= 0)
 			{
-				if(keys[i].type == type)
+				List<KeyItem> keys = LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys;
+				for (int i = 0; i < keys.Count; i++)
 				{
-					list.Add(keys[i].name);
+					if (keys[i].type == type)
+					{
+						list.Add(keys[i].name);
+					}
 				}
 			}
+			
 			return list;
 		}
 		public int GetKeyIndexByName(string keyName)
@@ -139,10 +151,14 @@ namespace Visuals
 		}
 		public string GetKeyNameByIndex(int keyIndex)
 		{
-			if (keyIndex >= 0 && keyIndex < LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.Count)
+			if (localizationCategoryIndex >= 0)
 			{
-				return LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys[keyIndex].name;
+				if (keyIndex >= 0 && keyIndex < LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.Count)
+				{
+					return LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys[keyIndex].name;
+				}
 			}
+			
 			return null;
 		}
 		
