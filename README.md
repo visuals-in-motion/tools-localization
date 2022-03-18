@@ -8,14 +8,15 @@
 
 # Подготовка данных для загрузки
 
-Для начала создайте документ гугл таблиц по следующему приципу: первый столбец - названия ключей, второй - тип значений (text, sprite, texture), все последующие - переводы.
+Для начала создайте документ гугл таблиц по следующему приципу: первый столбец - названия ключей, второй - тип значений (text, sprite, texture, sound), все последующие - переводы.
 
-![image](https://user-images.githubusercontent.com/52681127/158788578-c640b1ee-0915-41c0-b9fc-8df2e3fa6e98.png)
+![image](https://user-images.githubusercontent.com/52681127/159005409-38995b6a-f470-47c7-bd93-644bebf5c391.png)
 
 Доступно 3 типа данных: 
 - text (текст)
 - sprite (путь к изображению относительно папки Streaming Assets)
 - texture (путь к изображению относительно папки Streaming Assets)
+- sound (путь к аудио клипу относительно папки Streaming Assets)
 
 Для удобства навигации можно создать несколько листов. Все они будут загружены в проект.
 
@@ -27,7 +28,7 @@
 
 Для загрузки данных выберете в верхнем меню Visuals -> Localization -> Import Google Sheets
 
-![image](https://user-images.githubusercontent.com/52681127/158787967-d1270793-45b0-454c-bcbd-6eea0cc4a8fe.png)
+![image](https://user-images.githubusercontent.com/52681127/159005781-c9c0e8ea-09a2-494e-92e2-bcf1a3de74d8.png)
 
 Все файлы локализации хранятся в Assets -> Streaming Assets -> Localization.
 
@@ -37,7 +38,13 @@
 
 Для того, чтобы открыть таблицу в браузере, выберете в верхнем меню Visuals -> Localization -> Open Google Sheets
 
-![image](https://user-images.githubusercontent.com/52681127/158790515-f49072f3-2a4c-4c07-ab03-6aa30e766b72.png)
+![image](https://user-images.githubusercontent.com/52681127/159005817-3c2fc92e-8db9-4ef3-8fb4-b4fbae407e4c.png)
+
+## Очистка всех данных таблицы
+
+
+![image](https://user-images.githubusercontent.com/52681127/159005888-8141202a-8042-4289-b97b-459569b63e3e.png)
+
 
 # Основные возможности
 
@@ -57,13 +64,17 @@
 
 Для замены текстур. Для локализации неоходимо добавить этот компонент на объект, на котором уже есть компонент RawImage.
 
+### VisualsLocalizationAudio
+
+Для замены аудио клипов. Для локализации неоходимо добавить этот компонент на объект, на котором уже есть компонент AudioSource.
+
 ## Методы 
 
 ### LocalizationStorage
 
-- AddKeyValues(string categoryName, string keyName, string type, List<string> values) - добавить новый ключ для заданной категории
-- AddCategory(string categoryName) - добавить новую категорию в локализацию
-  
+- `AddKeyValues(string categoryName, string keyName, string type, List<string> values)` - добавить новый ключ для заданной категории
+- `AddCategory(string categoryName)` - добавить новую категорию в локализацию
+
 ### Общие для всех компонентов методы
 
 - GetValuesByKeyIndex(int index) - получить данные перевода по индексу ключа
@@ -72,9 +83,12 @@
 - GetCurrentCategoryAllKeys() - получить все ключи для текущей категории
 - GetCurrentCategoryKeysByType(string type) - получить все ключи для текущей категории заданного типа
 - GetKeyIndexByName(string keyName) - получить индекс ключа текущей категории по его имени
-- GetKeyNameByIndex(int keyIndex) - получить имя ключа текущей категории по его имени
+- GetKeyNameByIndex(int keyIndex) - получить имя ключа текущей категории по его индексу
 - GetCurrentCategoryName() - получить название текущей категории
 - GetCurrentCategoryIndex() - получить индекс текущей категории
+- GetCurrentCategoryInfo() - получить информацию о текущей категории
+- GetCurrentKeyInfo() - получить информацию о текущем ключе
+- GetCurrentValuesInfo() - получить данные перевода
   
 - SetKeyByIndex(int index) - установить новый ключ по индексу
 - SetKeyByName(string keyName) - установить новый ключ по имени
@@ -84,8 +98,29 @@
 ### VisualsLocalizationText
   
 - ReplaceSubstringInText(string newString, string separatorCharacter) - замена подстроки в тексте локализации
+
+### VisualsLocalizationAudio
+
+- PlayAudioSource() - начать воспроизведение на текущем языке
+- StopAudioSource() - остановить воспроизведение
+- GetAudioSource() - получить компонент AudioSource
   
 ## События
   
 - LocalizationStorage.changedLanguage - событие при смене языка. Возвращает индекс текущего языка.
 - VisualsLocalization.loadLocalization - событие загрузки данных локализации.
+
+## Примеры
+
+Вывести значение на текущем языке:
+
+```
+[SerializeField] private VisualsLocalizationText localizationtext;
+
+private void Start()
+	{
+		string currentText = localizationtext.GetCurrentValuesInfo()[LocalizationStorage.GetCurrentLanguages()];
+	}
+```
+
+Назначить новый ключ: `localizationtext.SetKeyByIndex(0);`
