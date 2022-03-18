@@ -58,22 +58,7 @@ namespace Visuals
                         {
                             audioClips.Add(fileName, audioClip);
                         }
-                        // StartCoroutine(Load(path, fileName, i));
                     }
-                }
-            }
-        }
-        private IEnumerator Load(string path, string fileName)
-        {
-            UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip("file://" + path, AudioType.WAV);
-            yield return request.SendWebRequest();
-
-            if (request.isDone)
-            {
-                AudioClip audioClip = DownloadHandlerAudioClip.GetContent(request);
-                if(!audioClips.ContainsKey(fileName))
-				{
-                    audioClips.Add(fileName, audioClip);
                 }
             }
         }
@@ -94,7 +79,6 @@ namespace Visuals
 						audioSource.clip = audioClips[value];
 						if (isPlaying && audioClips[value].samples > position)
 						{
-                            Debug.LogError("audioSource.Play();");
 							audioSource.timeSamples = position;
                             audioSource.Play();
                         }
