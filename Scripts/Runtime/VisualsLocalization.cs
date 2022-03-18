@@ -65,7 +65,12 @@ namespace Visuals
         {
             if (LocalizationStorage.GetSpreadsheetURL().Length > 0)
             {
+                List<string> files = GetLocalizationFiles();
 
+                for (int i = 0; i < files.Count; i++)
+				{
+                    File.Delete(files[i]);
+				}
                 string spreadsheetId = GetIdFromURL(LocalizationStorage.GetSpreadsheetURL());
                 LocalizationStorage.SetSpreadsheetId(spreadsheetId);
 
@@ -76,6 +81,7 @@ namespace Visuals
 
                 LoadLocalization();
                 loadLocalization?.Invoke();
+                Debug.Log("Localization successfully imported");
             }
         }
 #else
@@ -112,8 +118,12 @@ public static void ImportSimple()
             
             localizationParse.Run(files);
         }
-
-#region Private methods
+        public static void ClearLocalization()
+        {
+            LocalizationParse localizationParse = new LocalizationParse();
+            localizationParse.Clear();
+        }
+        #region Private methods
         private static async Task Downloading(List<SheetsInfo> states)
         {
             List<SheetsInfo> list = new List<SheetsInfo>(states);
@@ -186,10 +196,7 @@ public static void ImportSimple()
         {
             return $"https://docs.google.com/spreadsheets/d/{LocalizationStorage.GetSpreadsheetId()}/export?format=csv&gid={sheetsId}";
         }
-        private static void ClearLocalization(LocalizationParse localizationParse)
-        {
-            localizationParse.Clear();
-        }
+        
 #endregion
     }
 }

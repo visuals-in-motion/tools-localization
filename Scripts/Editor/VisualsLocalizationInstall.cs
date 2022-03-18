@@ -31,6 +31,11 @@ namespace Visuals
         {
             VisualsLocalization.Open();  
         }
+        [MenuItem("Visuals/Localization/Clear Localization")]
+        public static void ClearLocalization()
+        {
+            VisualsLocalization.ClearLocalization();
+        }
 
         private static void CheckDependencyInManifest()
         {
