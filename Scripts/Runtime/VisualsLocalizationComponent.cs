@@ -53,7 +53,22 @@ namespace Visuals
 			
 		}
 		#region Public methods
-
+		public virtual Localization GetCurrentCategoryInfo()
+		{
+			return LocalizationStorage.GetLocalization()[localizationCategoryIndex];
+		}
+		public virtual List<KeyItem> GetCurrentKeysInfo()
+		{
+			return GetCurrentCategoryInfo().keys;
+		}
+		public virtual KeyItem GetCurrentKeyInfo()
+		{
+			return GetCurrentCategoryInfo().keys[localizationKey];
+		}
+		public virtual List<string> GetCurrentValuesInfo()
+		{
+			return GetCurrentKeysInfo()[localizationKey].value;
+		}
 		public virtual void LocalizationLoad()
 		{
 			if (!localizationEnable) return;
@@ -64,7 +79,7 @@ namespace Visuals
 
 			localizationKey = GetKeyIndexByName(localizationKeyName);
 
-			List<string> values = GetValuesByKeyIndex(localizationKey);
+			List<string> values = GetCurrentValuesInfo();
 			if(values != null)
 			{
 				SetValues(values[languageIndex]);
@@ -78,7 +93,7 @@ namespace Visuals
 		{
 			if (localizationCategoryIndex >= 0)
 			{
-				return LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys[index].value; 
+				return GetCurrentKeysInfo()[index].value; 
 			}
 			else
 				return null;
@@ -87,7 +102,7 @@ namespace Visuals
 		{
 			if(localizationCategoryIndex >= 0)
 			{
-				if (index >= 0 && index < LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.Count)
+				if (index >= 0 && index < GetCurrentKeysInfo().Count)
 				{
 					localizationKey = index;
 					localizationKeyName = saveKeyName = GetCurrentKeyName();
@@ -110,7 +125,7 @@ namespace Visuals
 		{
 			if(localizationCategoryIndex >= 0)
 			{
-				return LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.FindIndex(k => k.name == localizationKeyName);
+				return GetCurrentKeysInfo().FindIndex(k => k.name == localizationKeyName);
 			}
 			return -1;
 		}
@@ -127,7 +142,7 @@ namespace Visuals
 			List<string> list = new List<string>();
 			if(localizationCategoryIndex >= 0)
 			{
-				List<KeyItem> keys = LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys;
+				List<KeyItem> keys = GetCurrentKeysInfo();
 				for (int i = 0; i < keys.Count; i++)
 				{
 					if (keys[i].type == type)
@@ -153,9 +168,10 @@ namespace Visuals
 		{
 			if (localizationCategoryIndex >= 0)
 			{
-				if (keyIndex >= 0 && keyIndex < LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys.Count)
+				List<KeyItem> keys = GetCurrentKeysInfo();
+				if (keyIndex >= 0 && keyIndex < keys.Count)
 				{
-					return LocalizationStorage.GetLocalization()[localizationCategoryIndex].keys[keyIndex].name;
+					return keys[keyIndex].name;
 				}
 			}
 			
@@ -164,7 +180,7 @@ namespace Visuals
 		
 		public string GetCurrentCategoryName()
 		{
-			return LocalizationStorage.GetCategories()[localizationCategoryIndex];
+			return GetCurrentCategoryInfo().categoryName;
 		}
 		public int GetCurrentCategoryIndex()
 		{
